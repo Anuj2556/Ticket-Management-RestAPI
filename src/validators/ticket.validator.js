@@ -35,7 +35,7 @@ function validateBody(schema) {
                 }
             })
         }
-        req.query = result.data;
+        req.body = result.data;
         next()
     }
 }
@@ -67,7 +67,7 @@ function validateQuery(schema){
                 }
             })
         }
-        req.query = result.data;
+        req.body = result.data;
         next()
     }
 }

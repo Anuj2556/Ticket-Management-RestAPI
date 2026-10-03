@@ -49,7 +49,7 @@ Routes receive HTTP requests, validators reject invalid input, controllers coord
 
 ## Current persistence
 
-The current repository implementation uses in-memory seed data. Data resets when the server restarts. A database repository can be introduced later without changing controllers or routes.
+The API uses SQLite through `better-sqlite3`. The database file is created as `ticket-management.db` in the project root. Tables are initialized automatically when the application starts; records must be created through the API.
 
 ## Example request
 
@@ -64,4 +64,3 @@ description=Payment is failing during checkout.
 priority=high
 requester=user@example.com
 ```
-"# Ticket-Management-RestAPI" 

@@ -6,3 +6,6 @@ coverage/
 logs/
 .DS_Store
 CHECKLIST.md
+*.db
+*.db-shm
+*.db-wal
