@@ -1,0 +1,36 @@
+const express=require('express')
+
+const {
+    listTickets,
+    getTicket,
+    createTicket,
+    updateTicket,
+    updateTicketStatus,
+    deleteTicket
+}=require('../controllers/ticket.controller')
+
+const {
+    createTicketSchema,
+    updateTicketSchema,
+    statusSchema,
+    validateBody,
+    listTicketQuerySchema,
+    validateQuery
+}=require('../validators/ticket.validator')
+
+
+const router=express.Router()
+
+router.get("/",validateQuery(listTicketQuerySchema),listTickets)
+
+router.post("/",validateBody(createTicketSchema),createTicket)
+
+router.get("/:ticketId",getTicket)
+
+router.patch("/:ticketId",validateBody(updateTicketSchema),updateTicket)
+
+router.patch("/:ticketId/status",validateBody(statusSchema),updateTicketStatus)
+
+router.delete("/:ticketId",deleteTicket)
+
+module.exports=router
