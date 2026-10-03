@@ -1,0 +1,135 @@
+{
+  "info": {
+    "name": "Ticket Management API",
+    "description": "Requests for the Ticket Management REST API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "ticketId",
+      "value": "ticket-1"
+    },
+    {
+      "key": "commentId",
+      "value": "comment-1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tickets",
+      "item": [
+        {
+          "name": "List tickets",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/tickets?page=1&limit=10&sortBy=createdAt&sortOrder=desc"
+          }
+        },
+        {
+          "name": "Create ticket",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "title", "value": "Payment issue", "type": "text" },
+                { "key": "description", "value": "Payment is failing during checkout.", "type": "text" },
+                { "key": "priority", "value": "high", "type": "text" },
+                { "key": "requester", "value": "user@example.com", "type": "text" },
+                { "key": "assignee", "value": "support@example.com", "type": "text" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/v1/tickets"
+          }
+        },
+        {
+          "name": "Get ticket",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/tickets/{{ticketId}}" }
+        },
+        {
+          "name": "Update ticket",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [{ "key": "priority", "value": "medium", "type": "text" }] },
+            "url": "{{baseUrl}}/api/v1/tickets/{{ticketId}}"
+          }
+        },
+        {
+          "name": "Change ticket status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [{ "key": "status", "value": "in_progress", "type": "text" }] },
+            "url": "{{baseUrl}}/api/v1/tickets/{{ticketId}}/status"
+          }
+        },
+        {
+          "name": "Delete ticket",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v1/tickets/{{ticketId}}" }
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "List comments",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/tickets/{{ticketId}}/comments?page=1&limit=10&sortBy=createdAt&sortOrder=desc"
+          }
+        },
+        {
+          "name": "Create comment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "author", "value": "agent@example.com", "type": "text" },
+                { "key": "body", "value": "We are investigating this issue.", "type": "text" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/v1/tickets/{{ticketId}}/comments"
+          }
+        },
+        {
+          "name": "Get comment",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/tickets/{{ticketId}}/comments/{{commentId}}" }
+        },
+        {
+          "name": "Update comment",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [{ "key": "body", "value": "The issue has been escalated.", "type": "text" }] },
+            "url": "{{baseUrl}}/api/v1/tickets/{{ticketId}}/comments/{{commentId}}"
+          }
+        },
+        {
+          "name": "Delete comment",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v1/tickets/{{ticketId}}/comments/{{commentId}}" }
+        }
+      ]
+    }
+  ]
+}
