@@ -20,7 +20,12 @@ function getComment(req,res){
 }
 
 function createComment(req,res){
-    const comment=commentService.createComment(req.params.ticketId,req.body)
+const commentData={
+    ...req.body,
+    author:req.body.author||req.user.email
+}
+    
+    const comment=commentService.createComment(req.params.ticketId,commentData)
 
     res.status(201).json({
         success:true,

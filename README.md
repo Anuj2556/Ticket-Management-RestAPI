@@ -1,11 +1,22 @@
 # Ticket Management REST API
 
-A layered Express API for managing tickets and comments.
+A layered Express API for managing tickets and comments, featuring JWT authentication and role-based access control.
 
 ## Requirements
 
 - Node.js 20+ recommended
 - npm
+
+## Environment Configuration
+
+Create a `.env` file in the root directory (refer to `.env.example`):
+
+```env
+PORT=3000
+DB_PATH=ticket-management.db
+JWT_SECRET=your_jwt_secret_key_here
+JWT_EXPIRES_IN=1d
+```
 
 ## Setup
 
@@ -20,47 +31,79 @@ The API runs at `http://localhost:3000` by default.
 
 ```text
 npm run dev    Start the development server with Nodemon
-npm start      Start the server
-npm test       Run Node's test command when tests are added
+npm start      Start the production server
+npm test       Run tests
 ```
 
-## API documentation
+## Authentication & Authorization
 
-See [docs/API.md](docs/API.md) for the endpoint table, request fields, pagination, filtering, sorting, status transitions, and response shapes.
+The API supports both JSON REST API requests and browser form submissions via EJS views.
 
-## Postman
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| `POST` | `/auth/register` | Register a new user | Public |
+| `POST` | `/auth/login` | Login and receive a JWT Bearer token | Public |
+| `GET` | `/auth/register` | Browser registration UI page | Public |
+| `GET` | `/auth/login` | Browser login UI page | Public |
 
-Import [postman/Ticket-Management.postman_collection.json](postman/Ticket-Management.postman_collection.json) into Postman. The collection uses `http://localhost:3000` as its default base URL and supports the API's JSON and `application/x-www-form-urlencoded` request bodies.
+### Protected Endpoints
+
+All `/api/v1/tickets` and `/api/v1/tickets/:ticketId/comments` routes require a valid JWT token in the `Authorization` header:
+
+```text
+Authorization: Bearer <your_jwt_token>
+```
+
+- When creating tickets (`POST /api/v1/tickets`), the `requester` defaults automatically to the authenticated user's email.
+- When creating comments (`POST /api/v1/tickets/:ticketId/comments`), the `author` defaults automatically to the authenticated user's email.
+- Deleting tickets (`DELETE /api/v1/tickets/:ticketId`) requires an `admin` role.
+
+---
+
+## Example Usage
+
+### 1. Register a user
+```powershell
+Invoke-RestMethod -Uri "http://localhost:3000/auth/register" -Method Post -ContentType "application/json" -Body '{"email":"agent@example.com","password":"password123"}'
+```
+
+### 2. Login to get token
+```powershell
+$res = Invoke-RestMethod -Uri "http://localhost:3000/auth/login" -Method Post -ContentType "application/json" -Body '{"email":"agent@example.com","password":"password123"}'
+$token = $res.data.token
+```
+
+### 3. Create a ticket (using Bearer token)
+```powershell
+Invoke-RestMethod -Uri "http://localhost:3000/api/v1/tickets" -Method Post -ContentType "application/json" -Headers @{ Authorization = "Bearer $token" } -Body '{"title":"Login issue","description":"Users cannot log in to dashboard","priority":"high"}'
+```
+
+### 4. List tickets
+```powershell
+Invoke-RestMethod -Uri "http://localhost:3000/api/v1/tickets" -Headers @{ Authorization = "Bearer $token" }
+```
+
+---
+
+## API Documentation
+
+See [docs/API.md](docs/API.md) for full endpoint specifications, pagination, sorting, status transitions, and error shapes.
 
 ## Architecture
 
 ```text
 src/
-├── constants/
-├── controllers/
-├── middleware/
-├── repositories/
-├── routes/
-├── services/
-└── validators/
+├── config/         Database and environment setup
+├── constants/      Status enums and transitions
+├── controllers/    Route handlers and HTTP responses
+├── middleware/     Authentication (JWT), error handlers, not-found
+├── repositories/   Database access boundary (better-sqlite3)
+├── routes/         Express route definitions
+├── services/       Business logic and authentication
+├── validators/     Zod request validators
+└── views/          EJS templates (login, register)
 ```
 
-Routes receive HTTP requests, validators reject invalid input, controllers coordinate the request, services contain business rules, and repositories provide the persistence boundary.
+## Persistence
 
-## Current persistence
-
-The API uses SQLite through `better-sqlite3`. The database file is created as `ticket-management.db` in the project root. Tables are initialized automatically when the application starts; records must be created through the API.
-
-## Example request
-
-```text
-POST /api/v1/tickets
-Content-Type: application/x-www-form-urlencoded
-```
-
-```text
-title=Payment issue
-description=Payment is failing during checkout.
-priority=high
-requester=user@example.com
-```
+The API uses SQLite through `better-sqlite3`. Tables (`tickets`, `comments`, `users`) and indexes are initialized automatically when the application starts.

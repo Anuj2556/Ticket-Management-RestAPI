@@ -52,17 +52,21 @@ Error response:
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/health` | Health check |
-| POST | `/api/v1/tickets` | Create a ticket |
-| GET | `/api/v1/tickets` | List tickets |
-| GET | `/api/v1/tickets/:ticketId` | Get one ticket |
-| PATCH | `/api/v1/tickets/:ticketId` | Update ticket fields |
-| PATCH | `/api/v1/tickets/:ticketId/status` | Change ticket status |
-| DELETE | `/api/v1/tickets/:ticketId` | Delete a ticket |
-| POST | `/api/v1/tickets/:ticketId/comments` | Create a comment |
-| GET | `/api/v1/tickets/:ticketId/comments` | List comments |
-| GET | `/api/v1/tickets/:ticketId/comments/:commentId` | Get one comment |
-| PATCH | `/api/v1/tickets/:ticketId/comments/:commentId` | Update a comment |
-| DELETE | `/api/v1/tickets/:ticketId/comments/:commentId` | Delete a comment |
+| POST | `/auth/register` | Register a new user |
+| POST | `/auth/login` | Login and receive a JWT Bearer token |
+| GET | `/auth/register` | HTML registration form |
+| GET | `/auth/login` | HTML login form |
+| POST | `/api/v1/tickets` | Create a ticket (Requires Bearer token) |
+| GET | `/api/v1/tickets` | List tickets (Requires Bearer token) |
+| GET | `/api/v1/tickets/:ticketId` | Get one ticket (Requires Bearer token) |
+| PATCH | `/api/v1/tickets/:ticketId` | Update ticket fields (Requires Bearer token) |
+| PATCH | `/api/v1/tickets/:ticketId/status` | Change ticket status (Requires Bearer token) |
+| DELETE | `/api/v1/tickets/:ticketId` | Delete a ticket (Requires Admin role) |
+| POST | `/api/v1/tickets/:ticketId/comments` | Create a comment (Requires Bearer token) |
+| GET | `/api/v1/tickets/:ticketId/comments` | List comments (Requires Bearer token) |
+| GET | `/api/v1/tickets/:ticketId/comments/:commentId` | Get one comment (Requires Bearer token) |
+| PATCH | `/api/v1/tickets/:ticketId/comments/:commentId` | Update a comment (Requires Bearer token) |
+| DELETE | `/api/v1/tickets/:ticketId/comments/:commentId` | Delete a comment (Requires Bearer token) |
 
 ## Ticket requests
 

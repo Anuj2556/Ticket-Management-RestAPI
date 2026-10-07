@@ -9,7 +9,12 @@ const  {
   validateQuery
 } =require('../validators/comment.validator')
 
+const {authenticate}=require('../middleware/auth')
+
 const router = express.Router({mergeParams:true})
+
+
+router.use(authenticate)
 
 
 router.get("/",validateQuery(commentListQuerySchema),commentController.listComments)

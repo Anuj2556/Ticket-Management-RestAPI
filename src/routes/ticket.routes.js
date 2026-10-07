@@ -18,8 +18,11 @@ const {
     validateQuery
 }=require('../validators/ticket.validator')
 
+const {authenticate,authorize}=require('../middleware/auth')
 
 const router=express.Router()
+
+router.use(authenticate)
 
 router.get("/",validateQuery(listTicketQuerySchema),listTickets)
 
@@ -31,6 +34,6 @@ router.patch("/:ticketId",validateBody(updateTicketSchema),updateTicket)
 
 router.patch("/:ticketId/status",validateBody(statusSchema),updateTicketStatus)
 
-router.delete("/:ticketId",deleteTicket)
+router.delete("/:ticketId",authorize('admin'),deleteTicket)
 
 module.exports=router

@@ -21,7 +21,11 @@ function getTicket(req,res){
 }
 
 function createTicket(req,res){
-    const ticket=ticketService.createTicket(req.body)
+    const ticketData = {
+        ...req.body,
+        requester: req.body.requester || req.user.email,
+    };
+    const ticket = ticketService.createTicket(ticketData);
 
     res.status(201).json({
         success:true,

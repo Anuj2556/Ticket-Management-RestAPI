@@ -30,7 +30,14 @@ db.exec(`
       REFERENCES tickets(id)
       ON DELETE CASCADE
   );
-
+  CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'requester',
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
   CREATE INDEX IF NOT EXISTS comments_ticket_id_idx
     ON comments(ticket_id);
 `);
